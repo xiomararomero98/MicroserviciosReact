@@ -4,6 +4,7 @@ import com.example.ms_usuarios.Model.Rol;
 import com.example.ms_usuarios.Model.Usuario;
 import com.example.ms_usuarios.Repository.RolRepository;
 import com.example.ms_usuarios.Repository.UserRepository;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +31,7 @@ public class LoadDatabase {
     }
 
     // ==========================================================
-    // 2) CARGA DE USUARIOS
+    // 2) CARGA DE USUARIOS (CON CONTRASEÑAS ENCRIPTADAS)
     // ==========================================================
     @Bean
     @Order(2)
@@ -46,12 +47,16 @@ public class LoadDatabase {
 
                 if (admin != null && cliente != null) {
 
+                    // ENCRIPTAR PASSWORDS
+                    String passAdmin = BCrypt.hashpw("123456", BCrypt.gensalt());
+                    String passCliente = BCrypt.hashpw("654321", BCrypt.gensalt());
+
                     Usuario u1 = new Usuario(
                             null,
                             "Benjamin",
                             "Admin",
                             "admin@discoclub.cl",
-                            "123456",
+                            passAdmin,
                             "99999999",
                             "Santiago",
                             admin
@@ -62,7 +67,7 @@ public class LoadDatabase {
                             "Laura",
                             "Cliente",
                             "cliente@discoclub.cl",
-                            "654321",
+                            passCliente,
                             "88888888",
                             "La Florida",
                             cliente
